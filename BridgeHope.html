@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BridgeHope - Connecting Those in Need with Those Who Care</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .glass-dark {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #22c55e 0%, #3b82f6 50%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .pulse-ring {
+            animation: pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+        }
+        
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .slide-up {
+            animation: slideUp 0.6s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(100px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            pointer-events: none;
+            animation: confetti-fall 3s ease-out forwards;
+        }
+        
+        @keyframes confetti-fall {
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+        
+        .screen { display: none; }
+        .screen.active { display: flex; }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(34, 197, 94, 0.4);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #22c55e;
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+        }
+        
+        .progress-step.active .progress-dot {
+            background: #22c55e;
+            box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.2);
+        }
+        
+        .progress-step.completed .progress-dot {
+            background: #22c55e;
+        }
+        
+        .progress-step .progress-dot {
+            transition: all 0.3s ease;
+        }
+        
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.5;
+            animation: blob 7s infinite;
+        }
+        
+        @keyframes blob {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+        
+        .modal-overlay {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+        }
+        
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.1); }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 4px; }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen text-white overflow-x-hidden">
+    <!-- Animated Background Blobs -->
+    <div class="blob w-96 h-96 bg-green-500 top-0 left-0" style="animation-delay: 0s;"></div>
+    <div class="blob w-80 h-80 bg-blue-500 top-1/3 right-0" style="animation-delay: 2s;"></div>
+    <div class="blob w-72 h-72 bg-purple-500 bottom-0 left-1/3" style="animation-delay: 4s;"></div>
+
+    <!-- LANDING PAGE -->
+    <div id="landing" class="screen active flex-col min-h-screen">
+        <!-- Navbar -->
+        <nav class="fixed top-0 left-0 right-0 z-50 glass px-6 py-4">
+            <div class="max-w-7xl mx-auto flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-green-400 to-blue-500 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-hands-holding-heart text-white text-lg"></i>
+                    </div>
+                    <span class="text-2xl font-bold gradient-text">BridgeHope</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#features" class="text-gray-300 hover:text-white transition">Features</a>
+                    <a href="#how-it-works" class="text-gray-300 hover:text-white transition">How It Works</a>
+                    <a href="#impact" class="text-gray-300 hover:text-white transition">Impact</a>
+                </div>
+                <button onclick="showScreen('auth')" class="btn-primary px-6 py-2 rounded-full text-white font-semibold">
+                    Get Started
+                </button>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="flex-1 flex items-center justify-center px-6 pt-20">
+            <div class="max-w-6xl mx-auto text-center">
+                <div class="mb-8 floating">
+                    <div class="relative inline-block">
+                        <div class="w-32 h-32 mx-auto bg-gradient-to-br from-green-400 to-blue-500 rounded-3xl flex items-center justify-center">
+                            <i class="fas fa-hands-holding-heart text-5xl text-white"></i>
+                        </div>
+                        <div class="absolute -top-2 -right-2 w-8 h-8 bg-green-500 rounded-full pulse-ring"></div>
+                    </div>
+                </div>
+                <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+                    <span class="gradient-text">Connecting</span> Those in Need<br>
+                    with Those Who Care
+                </h1>
+                <p class="text-xl text-gray-400 mb-10 max-w-3xl mx-auto">
+                    BridgeHope bridges the gap between people seeking help and professionals ready to provide it. 
+                    Report problems, verify needs, and deliver aid — all in one trusted platform.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <button onclick="showScreen('auth')" class="btn-primary px-8 py-4 rounded-full text-lg font-semibold flex items-center space-x-2">
+                        <span>Join BridgeHope</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <button class="glass px-8 py-4 rounded-full text-lg font-semibold hover:bg-white/20 transition flex items-center space-x-2">
+                        <i class="fas fa-play-circle"></i>
+                        <span>Watch Demo</span>
+                    </button>
+                </div>
+                
+                <!-- Stats -->
+                <div class="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
+                    <div class="text-center">
+                        <div class="text-4xl font-bold gradient-text">10K+</div>
+                        <div class="text-gray-400 mt-1">Problems Solved</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-4xl font-bold gradient-text">5K+</div>
+                        <div class="text-gray-400 mt-1">Verified Helpers</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-4xl font-bold gradient-text">50+</div>
+                        <div class="text-gray-400 mt-1">Cities Covered</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="py-20 px-6">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold mb-4">Why Choose BridgeHope?</h2>
+                    <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+                        A comprehensive platform designed to make help accessible, verifiable, and impactful.
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Feature 1 -->
+                    <div class="glass rounded-3xl p-8 card-hover">
+                        <div class="w-16 h-16 bg-gradient-to-br from-green-400 to-green-600 rounded-2xl flex items-center justify-center mb-6">
+                            <i class="fas fa-bullhorn text-3xl text-white"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">Report Problems</h3>
+                        <p class="text-gray-400">
+                            Geo-tag your problem with photos. Choose from categories: Medical, Water, Food, Shelter, Education, Legal, or Disaster.
+                        </p>
+                    </div>
+                    <!-- Feature 2 -->
+                    <div class="glass rounded-3xl p-8 card-hover">
+                        <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center mb-6">
+                            <i class="fas fa-shield-halved text-3xl text-white"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">Verified Help</h3>
+                        <p class="text-gray-400">
+                            Professionals verify every case. Doctors, lawyers, and ASHA workers ensure your needs are authentic and addressed.
+                        </p>
+                    </div>
+                    <!-- Feature 3 -->
+                    <div class="glass rounded-3xl p-8 card-hover">
+                        <div class="w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center mb-6">
+                            <i class="fas fa-hand-holding-heart text-3xl text-white"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">Direct Support</h3>
+                        <p class="text-gray-400">
+                            Chat directly with helpers. Track proof of help delivery. Escrow-based donations ensure transparency.
+                        </p>
+                    </div>
+                    <!-- Feature 4 -->
+                    <div class="glass rounded-3xl p-8 card-hover">
+                        <div class="w-16 h-16 bg-gradient-to-br from-red-400 to-red-600 rounded-2xl flex items-center justify-center mb-6">
+                            <i class="fas fa-siren-on text-3xl text-white"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">Disaster SOS</h3>
+                        <p class="text-gray-400">
+                            Emergency broadcast system. Real-time coordination during natural disasters. Get help within minutes.
+                        </p>
+                    </div>
+                    <!-- Feature 5 -->
+                    <div class="glass rounded-3xl p-8 card-hover">
+                        <div class="w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl flex items-center justify-center mb-6">
+                            <i class="fas fa-users text-3xl text-white"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">ASHA Network</h3>
+                        <p class="text-gray-400">
+                            Connect with ASHA workers for maternal health, vaccination, and community healthcare support.
+                        </p>
+                    </div>
+                    <!-- Feature 6 -->
+                    <div class="glass rounded-3xl p-8 card-hover">
+                        <div class="w-16 h-16 bg-gradient-to-br from-teal-400 to-cyan-500 rounded-2xl flex items-center justify-center mb-6">
+                            <i class="fas fa-lock text-3xl text-white"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">Secure & Private</h3>
+                        <p class="text-gray-400">
+                            End-to-end encrypted chats. Anonymized data. Your privacy is our priority.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works -->
+        <section id="how-it-works" class="py-20 px-6">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold mb-4">How It Works</h2>
+                    <p class="text-gray-400 text-lg">Simple steps to get the help you need</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-12">
+                    <!-- Step 1 -->
+                    <div class="text-center relative">
+                        <div class="w-20 h-20 mx-auto bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center text-3xl font-bold mb-6 relative z-10">
+                            1
+                        </div>
+                        <div class="hidden md:block absolute top-10 left-2/3 w-full h-0.5 bg-gradient-to-r from-green-500 to-transparent"></div>
+                        <h3 class="text-2xl font-bold mb-4">Report Your Problem</h3>
+                        <p class="text-gray-400">Use the app to report your issue with location, photos, and category. Takes less than 2 minutes.</p>
+                    </div>
+                    <!-- Step 2 -->
+                    <div class="text-center relative">
+                        <div class="w-20 h-20 mx-auto bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-3xl font-bold mb-6 relative z-10">
+                            2
+                        </div>
+                        <div class="hidden md:block absolute top-10 left-2/3 w-full h-0.5 bg-gradient-to-r from-blue-500 to-transparent"></div>
+                        <h3 class="text-2xl font-bold mb-4">Get Verified</h3>
+                        <p class="text-gray-400">ASHA workers or AI systems verify your case to ensure resources go to those who need them most.</p>
+                    </div>
+                    <!-- Step 3 -->
+                    <div class="text-center">
+                        <div class="w-20 h-20 mx-auto bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center text-3xl font-bold mb-6">
+                            3
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">Receive Help</h3>
+                        <p class="text-gray-400">Chat directly with helpers, track progress, and verify proof of help delivery. Escrow ensures transparency.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="py-20 px-6">
+            <div class="max-w-4xl mx-auto text-center">
+                <div class="glass rounded-3xl p-12 relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-r from-green-500/20 to-blue-500/20"></div>
+                    <div class="relative z-10">
+                        <h2 class="text-4xl font-bold mb-6">Ready to Make a Difference?</h2>
+                        <p class="text-xl text-gray-300 mb-8">Join thousands of helpers and people in need across India.</p>
+                        <button onclick="showScreen('auth')" class="btn-primary px-10 py-4 rounded-full text-lg font-semibold inline-flex items-center space-x-2">
+                            <span>Get Started Free</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="glass px-6 py-8 mt-auto">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between">
+                <div class="flex items-center space-x-3 mb-4 md:mb-0">
+                    <div class="w-8 h-8 bg-gradient-to-br from-green-400 to-blue-500 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-hands-holding-heart text-white text-sm"></i>
+                    </div>
+                    <span class="font-bold">BridgeHope</span>
+                </div>
+                <div class="text-gray-400 text-sm">
+                    &copy; 2026 BridgeHope. Built with care for a better tomorrow.
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- AUTH PAGE -->
+    <div id="auth" class="screen flex-col min-h-screen">
+        <nav class="fixed top-0 left-0 right-0 z-50 glass px-6 py-4">
+            <div class="max-w-7xl mx-auto flex items-center justify-between">
+                <button onclick="showScreen('landing')" class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-green-400 to-blue-500 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-hands-holding-heart text-white text-lg"></i>
+                    </div>
+                    <span class="text-2xl font-bold gradient-text">BridgeHope</span>
+                </button>
+            </div>
+        </nav>
+        
+        <div class="flex-1 flex items-center justify-center px-6 pt-20">
+            <div class="max-w-md w-full">
+                <div class="text-center mb-10">
+                    <h1 class="text-4xl font-bold mb-4">Welcome to BridgeHope</h1>
+                    <p class="text-gray-400">Choose how you want to help or get help</p>
+                </div>
+                
+                <!-- Google OAuth Button -->
+                <button onclick="handleGoogleAuth()" class="w-full glass py-4 px-6 rounded-2xl flex items-center justify-center space-x-4 hover:bg-white/20 transition mb-6">
+                    <svg class="w-6 h-6" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    <span class="text-lg font-semibold">Continue with Google</span>
+                </button>
+                
+                <div class="flex items-center mb-6">
+                    <div class="flex-1 h-px bg-gray-600"></div>
+                    <span class="px-4 text-gray-400">or</span>
+                    <div class="flex-1 h-px bg-gray-600"></div>
+                </div>
+                
+                <!-- Phone Auth -->
+                <div class="glass rounded-2xl p-6">
+                    <label class="block text-sm font-medium mb-2">Phone Number</label>
+                    <div class="flex">
+                        <div class="bg-gray-700/50 px-4 py-4 rounded-l-xl text-gray-400">+91</div>
+                        <input type="tel" id="phoneInput" placeholder="9876543210" class="flex-1 bg-gray-700/50 border-l-0 rounded-r-xl px-4 py-4 border border-gray-600">
+                    </div>
+                    <button onclick="requestOTP()" class="w-full btn-primary py-4 rounded-xl mt-4 font-semibold">
+                        Request OTP
+                    </button>
+                </div>
+                
+                <p class="text-center text-gray-400 mt-6 text-sm">
+                    By continuing, you agree to our Terms of Service and Privacy Policy
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- OTP VERIFICATION -->
+    <div id="otp" class="screen flex-col min-h-screen">
+        <nav class="fixed top-0 left-0 right-0 z-50 glass px-6 py-4">
+            <div class="max-w-7xl mx-auto flex items-center justify-between">
+                <button onclick="showScreen('auth')" class="flex items-center space-x-3">
+                    <i class="fas fa-arrow-left"></i>
+                    <span class="font-semibold">Back</span>
+                </button>
+            </div>
+        </nav>
+        
+        <div class="flex-1 flex items-center justify-center px-6 pt-20">
+            <div class="max-w-md w-full">
+                <div class="text-center mb-10">
+                    <div class="w-20 h-20 mx-auto bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-shield-halved text-3xl text-white"></i>
+                    </div>
+                    <h1 class="text-4xl font-bold mb-4">Verify Your Phone</h1>
+                    <p class="text-gray-400">Enter the 6-digit code sent to <span id="displayPhone" class="text-white">+91 9876543210</span></p>
+                </div>
+                
+                <div class="flex justify-center gap-3 mb-8">
+                    <input type="text" maxlength="1" class="w-14 h-16 text-center text-2xl font-bold bg-gray-800 rounded-xl border border-gray-600 focus:border-green-500" onkeyup="moveToNext(this, 0)">
+                    <input type="text" maxlength="1" class="w-14 h-16 text-center text-2xl font-bold bg-gray-800 rounded-xl border border-gray-600 focus:border-green-500" onkeyup="moveToNext(this, 1)">
+                    <input type="text" maxlength="1" class="w-14 h-16 text-center text-2xl font-bold bg-gray-800 rounded-xl border border-gray-600 focus:border-green-500" onkeyup="moveToNext(this, 2)">
+                    <input type="text" maxlength="1" class="w-14 h-16 text-center text-2xl font-bold bg-gray-800 rounded-xl border border-gray-600 focus:border-green-500" onkeyup="moveToNext(this, 3)">
+                    <input type="text" maxlength="1" class="w-14 h-16 text-center text-2xl font-bold bg-gray-800 rounded-xl border border-gray-600 focus:border-green-500" onkeyup="moveToNext(this, 4)">
+                    <input type="text" maxlength="1" class="w-14 h-16 text-center text-2xl font-bold bg-gray-800 rounded-xl border border-gray-600 focus:border-green-500" onkeyup="moveToNext(this, 5)">
+                </div>
+                
+                <button onclick="verifyOTP()" class="w-full btn-primary py-4 rounded-xl font-semibold mb-6">
+                    Verify OTP
+                </button>
+                
+                <p class="text-center text-gray-400">
+                    Resend code in <span id="timer" class="text-green-400 font-semibold">30</span>s
+                </p>
+                <button id="resendBtn" onclick="resendOTP()" class="w-full mt-4 py-3 text-gray-400 hover:text-white transition disabled:opacity-50" disabled>
+                    Resend OTP
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ONBOARDING -->
+    <div id="onboarding" class="screen flex-col min-h-screen">
+        <nav class="fixed top-0 left-0 right-0 z-50 glass px-6 py-4">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex items-center justify-between mb-4">
+                    <button onclick="showScreen('landing')" class="text-gray-400 hover:text-white">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                    <span class="text-sm text-gray-400">Step <span id="currentStep">1</span> of 5</span>
+                </div>
+                <!-- Progress Bar -->
+                <div class="h-1 bg-gray-700 rounded-full">
+                    <div id="progressBar" class="h-full bg-gradient-to-r from-green-400 to-blue-500 rounded-full transition-all duration-500" style="width: 20%"></div>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="flex-1 flex items-center justify-center px-6 pt-24 pb-10">
+            <!-- Step 1: Basic Info -->
+            <div id="step1" class="step-content max-w-lg w-full fade-in">
+                <h1 class="text-4xl font-bold mb-4">Let's get to know you</h1>
+                <p class="text-gray-400 mb-8">Tell us a bit about yourself</p>
+                
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Full Name</label>
+                        <input type="text" placeholder="Enter your full name" class="w-full bg-gray-800/50 border border-gray-600 rounded-xl px-4 py-4 focus:border-green-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Email Address</label>
+                        <input type="email" placeholder="you@example.com" class="w-full bg-gray-800/50 border border-gray-600 rounded-xl px-4 py-4 focus:border-green-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Phone Number</label>
+                        <div class="flex">
+                            <div class="bg-gray-700/50 px-4 py-4 rounded-l-xl text-gray-400">+91</div>
+                            <input type="tel" placeholder="9876543210" class="flex-1 bg-gray-800/50 border-y border-r border-gray-600 rounded-r-xl px-4 py-4 focus:border-green-500">
+                        </div>
+                    </div>
+                </div>
+                
+                <button onclick="nextStep()" class="w-full btn-primary py-4 rounded-xl mt-8 font-semibold">
+                    Continue
+                </button>
+            </div>
+            
+            <!-- Step 2: Role Selection -->
+            <div id="step2" class="step-content max-w-lg w-full hidden">
+                <h1 class="text-4xl font-bold mb-4">How do you want to help?</h1>
+                <p class="text-gray-400 mb-8">Choose your primary role</p>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <button onclick="selectRole(this, 'person_in_need')" class="role-card glass rounded-2xl p-6 text-left hover:bg-white/10 transition border-2 border-transparent">
+                        <div class="w-14 h-14 bg-gradient-to-br from-orange-400 to-red-500 rounded-xl flex items-center justify-center mb-4">
+                            <i class="fas fa-hand-holding-heart text-2xl text-white"></i>
+                        </div>
+                        <h3 class="text-lg font-bold mb-1">Need Help</h3>
+                        <p class="text-sm text-gray-400">I'm seeking assistance</p>
+                    </button>
+                    
+                    <button onclick="selectRole(this, 'volunteer')" class="role-card glass rounded-2xl p-6 text-left hover:bg-white/10 transition border-2 border-transparent">
+                        <div class="w-14 h-14 bg-gradient-to-br from-blue-400 to-purple-500 rounded-xl flex items-center justify-center mb-4">
+                            <i class="fas fa-heart text-2xl text-white"></i>
+                        </div>
+                        <h3 class="text-lg font-bold mb-1">Volunteer</h3>
+                        <p class="text-sm text-gray-400">I want to help others</p>
+                    </button>
+                    
+                    <button onclick="selectRole(this, 'professional')" class="role-card glass rounded-2xl p-6 text-left hover:bg-white/10 transition border-2 border-transparent">
+                        <div class="w-14 h-14 bg-gradient-to-br from-green-400 to-teal-500 rounded-xl flex items-center justify-center mb-4">
+                            <i class="fas fa-user-md text-2xl text-white"></i>
+                        </div>
+                        <h3 class="text-lg font-bold mb-1">Professional</h3>
+                        <p class="text-sm text-gray-400">Doctor, Lawyer, Expert</p>
+                    </button>
+                    
+                    <button onclick="selectRole(this, 'asha_worker')" class="role-card glass rounded-2xl p-6 text-left hover:bg-white/10 transition border-2 border-transparent">
+                        <div class="w-14 h-14 bg-gradient-to-br from-pink-400 to-rose-500 rounded-xl flex items-center justify-center mb-4">
+                            <i class="fas fa-user-nurse text-2xl text-white"></i>
+                        </div>
+                        <h3 class="text-lg font-bold mb-1">ASHA Worker</h3>
+                        <p class="text-sm text-gray-400">Community health worker</p>
+                    </button>
+                    
+                    <button onclick="selectRole(this, 'ngo')" class="role-card glass rounded-2xl p-6 text-left hover:bg-white/10 transition border-2 border-transparent">
+                        <div class="w-14 h-14 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center mb-4">
+                            <i class="fas fa-building text-2xl text-white"></i>
+                        </div>
+                        <h3 class="text-lg font-bold mb-1">NGO</h3>
+                        <p class="text-sm text-gray-400">Non-governmental org</p>
+                    </button>
+                    
+                    <button onclick="selectRole(this, 'government')" class="role-card glass rounded-2xl p-6 text-left hover:bg-white/10 transition border-2 border-transparent">
+                        <div class="w-14 h-14 bg-gradient-to-br from-gray-400 to-gray-600 rounded-xl flex items-center justify-center mb-4">
+                            <i class="fas fa-landmark text-2xl text-white"></i>
+                        </div>
+                        <h3 class="text-lg font-bold mb-1">Government</h3>
+                        <p class="text-sm text-gray-400">Govt. official/department</p>
+                    </button>
+                </div>
+                
+                <button onclick="nextStep()" class="w-full btn-primary py-4 rounded-xl mt-8 font-semibold">
+                    Continue
+                </button>
+            </div>
+            
+            <!-- Step 3: Skills (for volunteers) -->
+            <div id="step3" class="step-content max-w-lg w-full hidden">
+                <h1 class="text-4xl font-bold mb-4">Your Skills</h1>
+                <p class="text-gray-400 mb-8">Select areas where you can help</p>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <button onclick="toggleSkill(this, 'medical')" class="skill-card glass rounded-xl p-4 text-left hover:bg-white/10 transition border-2 border-transparent">
+                        <i class="fas fa-stethoscope text-green-400 mb-2"></i>
+                        <h3 class="font-semibold">Medical Aid</h3>
+                    </button>
+                    <button onclick="toggleSkill(this, 'legal')" class="skill-card glass rounded-xl p-4 text-left hover:bg-white/10 transition border-2 border-transparent">
+                        <i class="fas fa-gavel text-blue-400 mb-2"></i>
+                        <h3 class="font-semibold">Legal Help</h3>
+                    </button>
+                    <button onclick="toggleSkill(this, 'food')" class="skill-card glass rounded-xl p-4 text-left hover:bg-white/10 transition border-2 border-transparent">
+                        <i class="fas fa-utensils text-orange-400 mb-2"></i>
+                        <h3 class="font-semibold">Food Supply</h3>
+                    </button>
+                    <button onclick="toggleSkill(this, 'education')" class="skill-card glass rounded-xl p-4 text-left hover:bg-white/10 transition border-2 border-transparent">
+                        <i class="fas fa-graduation-cap text-purple-400 mb-2"></i>
+                        <h3 class="font-semibold">Education</h3>
+                    </button>
+                    <button onclick="toggleSkill(this, 'shelter')" class="skill-card glass rounded-xl p-4 text-left hover:bg-white/10 transition border-2 border-transparent">
+                        <i class="fas fa-home text-cyan-400 mb-2"></i>
+                        <h3 class="font-semibold">Shelter</h3>
+                    </button>
+                    <button onclick="toggleSkill(this, 'water')" class="skill-card glass rounded-xl p-4 text-left hover:bg-white/10 transition border-2 border-transparent">
+                        <i class="fas fa-faucet text-blue-400 mb-2"></i>
+                        <h3 class="font-semibold">Water</h3>
+                    </button>
+                </div>
+                
+                <div class="flex gap-4 mt-8">
+                    <button onclick="prevStep()" class="flex-1 glass py-4 rounded-xl font-semibold">
+                        Back
+                    </button>
+                    <button onclick="nextStep()" class="flex-1 btn-primary py-4 rounded-xl font-semibold">
+                        Continue
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Step 4: Location -->
+            <div id="step4" class="step-content max-w-lg w-full hidden">
+                <h1 class="text-4xl font-bold mb-4">Your Location</h1>
+                <p class="text-gray-400 mb-8">Help us connect you with nearby helpers</p>
+                
+                <div class="space-y-4">
+                    <button onclick="getLocation()" class="w-full glass rounded-xl p-6 text-left hover:bg-white/10 transition flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-location-crosshairs text-green-400 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold">Use Current Location</h3>
+                            <p class="text-sm text-gray-400">We'll detect your location automatically</p>
+                        </div>
+                    </button>
+                    
+                    <div class="relative">
+                        <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <input type="text" placeholder="Or search for your city..." class="w-full bg-gray-800/50 border border-gray-600 rounded-xl pl-12 pr-4 py-4 focus:border-green-500">
+                    </div>
+                    
+                    <div class="glass rounded-xl p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm text-gray-400">Detected Location</span>
+                            <span class="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">Auto-detected</span>
+                        </div>
+                        <div id="locationDisplay" class="text-lg font-semibold">Locating...</div>
+                    </div>
+                </div>
+                
+                <div class="flex gap-4 mt-8">
+                    <button onclick="prevStep()" class="flex-1 glass py-4 rounded-xl font-semibold">
+                        Back
+                    </button>
+                    <button onclick="nextStep()" class="flex-1 btn-primary py-4 rounded-xl font-semibold">
+                        Continue
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Step 5: Profile Photo -->
+            <div id="step5" class="step-content max-w-lg w-full hidden">
+                <h1 class="text-4xl font-bold mb-4">Add a Photo</h1>
+                <p class="text-gray-400 mb-8">Help others recognize you</p>
+                
+                <div class="flex flex-col items-center">
+                    <div id="photoPreview" class="w-40 h-40 rounded-full bg-gray-800 border-2 border-dashed border-gray-600 flex items-center justify-center mb-6 overflow-hidden cursor-pointer hover:border-green-500 transition">
+                        <div class="text-center">
+                            <i class="fas fa-camera text-4xl text-gray-500 mb-2"></i>
+                            <p class="text-sm text-gray-400">Add Photo</p>
+                        </div>
+                    </div>
+                    <input type="file" id="photoInput" accept="image/*" class="hidden" onchange="previewPhoto(event)">
+                    
+                    <p class="text-sm text-gray-400 text-center mb-8">
+                        This helps build trust in the community.<br>
+                        You can skip this step for now.
+                    </p>
+                </div>
+                
+                <div class="flex gap-4 mt-8">
+                    <button onclick="prevStep()" class="flex-1 glass py-4 rounded-xl font-semibold">
+                        Back
+                    </button>
+                    <button onclick="completeOnboarding()" class="flex-1 btn-primary py-4 rounded-xl font-semibold">
+                        Complete Setup
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SOFT BLOCK MODAL -->
+    <div id="blockModal" class="fixed inset-0 z-50 hidden items-center justify-center modal-overlay">
+        <div class="glass-dark rounded-3xl p-8 max-w-md mx-4 text-center slide-up">
+            <div class="w-20 h-20 mx-auto bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mb-6">
+                <i class="fas fa-clock text-4xl text-white"></i>
+            </div>
+            <h2 class="text-2xl font-bold mb-4">Verification in Progress</h2>
+            <p class="text-gray-300 mb-6">
+                Your account is being reviewed by our team. This usually takes 24-48 hours.
+            </p>
+            <div class="glass rounded-xl p-4 mb-6">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm text-gray-400">Verification Status</span>
+                    <span class="text-yellow-400 font-semibold">Pending</span>
+                </div>
+                <div class="h-2 bg-gray-700 rounded-full">
+                    <div class="h-full bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full" style="width: 30%"></div>
+                </div>
+            </div>
+            <p class="text-sm text-gray-400">
+                You'll be notified once verification is complete.
+            </p>
+        </div>
+    </div>
+
+    <!-- SUCCESS SCREEN -->
+    <div id="success" class="screen flex-col min-h-screen">
+        <div class="flex-1 flex items-center justify-center px-6">
+            <div class="max-w-md w-full text-center">
+                <div class="relative mb-8">
+                    <div class="w-32 h-32 mx-auto bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center">
+                        <i class="fas fa-check text-6xl text-white"></i>
+                    </div>
+                    <div class="absolute inset-0 w-32 h-32 mx-auto bg-green-500/30 rounded-full pulse-ring"></div>
+                </div>
+                <h1 class="text-4xl font-bold mb-4">Welcome to BridgeHope!</h1>
+                <p class="text-gray-400 mb-8">Your account has been created successfully. Start exploring how you can help or get help.</p>
+                
+                <div class="glass rounded-2xl p-6 mb-8">
+                    <div class="flex items-center space-x-4 text-left">
+                        <div class="w-14 h-14 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-2xl text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold" id="successName">User</h3>
+                            <p class="text-sm text-gray-400" id="successRole">Volunteer</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <button onclick="goToDashboard()" class="w-full btn-primary py-4 rounded-xl font-semibold">
+                    Explore BridgeHope
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Screen Management
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+        
+        // Google Auth Handler
+        function handleGoogleAuth() {
+            showScreen('onboarding');
+        }
+        
+        // OTP Functions
+        let timerInterval;
+        
+        function requestOTP() {
+            const phone = document.getElementById('phoneInput').value;
+            if (phone.length < 10) {
+                alert('Please enter a valid phone number');
+                return;
+            }
+            document.getElementById('displayPhone').textContent = '+91 ' + phone;
+            showScreen('otp');
+            startTimer();
+        }
+        
+        function startTimer() {
+            let time = 30;
+            const timerEl = document.getElementById('timer');
+            const resendBtn = document.getElementById('resendBtn');
+            
+            clearInterval(timerInterval);
+            resendBtn.disabled = true;
+            
+            timerInterval = setInterval(() => {
+                time--;
+                timerEl.textContent = time;
+                
+                if (time <= 0) {
+                    clearInterval(timerInterval);
+                    resendBtn.disabled = false;
+                }
+            }, 1000);
+        }
+        
+        function resendOTP() {
+            startTimer();
+        }
+        
+        function verifyOTP() {
+            const inputs = document.querySelectorAll('#otp input');
+            let otp = '';
+            inputs.forEach(input => otp += input.value);
+            
+            if (otp.length < 6) {
+                alert('Please enter the complete OTP');
+                return;
+            }
+            
+            showScreen('onboarding');
+        }
+        
+        // OTP Input Navigation
+        function moveToNext(input, index) {
+            const inputs = document.querySelectorAll('#otp input');
+            
+            if (input.value.length === 1 && index < 5) {
+                inputs[index + 1].focus();
+            }
+            
+            if (index === 5 && input.value) {
+                verifyOTP();
+            }
+        }
+        
+        // Onboarding Steps
+        let currentStep = 1;
+        let selectedRole = null;
+        let selectedSkills = [];
+        
+        function nextStep() {
+            if (currentStep < 5) {
+                document.getElementById(`step${currentStep}`).classList.add('hidden');
+                currentStep++;
+                document.getElementById(`step${currentStep}`).classList.remove('hidden');
+                document.getElementById(`step${currentStep}`).classList.add('fade-in');
+                document.getElementById('currentStep').textContent = currentStep;
+                document.getElementById('progressBar').style.width = (currentStep * 20) + '%';
+            }
+        }
+        
+        function prevStep() {
+            if (currentStep > 1) {
+                document.getElementById(`step${currentStep}`).classList.add('hidden');
+                currentStep--;
+                document.getElementById(`step${currentStep}`).classList.remove('hidden');
+                document.getElementById(`step${currentStep}`).classList.add('fade-in');
+                document.getElementById('currentStep').textContent = currentStep;
+                document.getElementById('progressBar').style.width = (currentStep * 20) + '%';
+            }
+        }
+        
+        function selectRole(el, role) {
+            document.querySelectorAll('.role-card').forEach(c => {
+                c.classList.remove('border-green-500');
+                c.classList.add('border-transparent');
+            });
+            el.classList.remove('border-transparent');
+            el.classList.add('border-green-500');
+            selectedRole = role;
+        }
+        
+        function toggleSkill(el, skill) {
+            if (el.classList.contains('border-green-500')) {
+                el.classList.remove('border-green-500');
+                selectedSkills = selectedSkills.filter(s => s !== skill);
+            } else {
+                el.classList.add('border-green-500');
+                selectedSkills.push(skill);
+            }
+        }
+        
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        document.getElementById('locationDisplay').textContent = 
+                            `${position.coords.latitude.toFixed(4)}, ${position.coords.longitude.toFixed(4)}`;
+                    },
+                    () => {
+                        document.getElementById('locationDisplay').textContent = 'Mumbai, Maharashtra';
+                    }
+                );
+            } else {
+                document.getElementById('locationDisplay').textContent = 'Mumbai, Maharashtra';
+            }
+        }
+        
+        function previewPhoto(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById('photoPreview').innerHTML = 
+                        `<img src="${e.target.result}" class="w-full h-full object-cover">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        document.getElementById('photoPreview').addEventListener('click', () => {
+            document.getElementById('photoInput').click();
+        });
+        
+        function completeOnboarding() {
+            // Check if professional or government role - show block modal
+            if (selectedRole === 'professional' || selectedRole === 'government' || selectedRole === 'asha_worker') {
+                document.getElementById('blockModal').classList.remove('hidden');
+                document.getElementById('blockModal').classList.add('flex');
+                return;
+            }
+            
+            showSuccess();
+        }
+        
+        function showSuccess() {
+            showScreen('success');
+            launchConfetti();
+            
+            const nameInput = document.querySelector('#step1 input');
+            document.getElementById('successName').textContent = nameInput?.value || 'User';
+            document.getElementById('successRole').textContent = selectedRole?.replace('_', ' ') || 'Volunteer';
+        }
+        
+        function launchConfetti() {
+            const colors = ['#22c55e', '#3b82f6', '#8b5cf6', '#f59e0b', '#ef4444'];
+            
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                    confetti.style.width = (Math.random() * 10 + 5) + 'px';
+                    confetti.style.height = (Math.random() * 10 + 5) + 'px';
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 30);
+            }
+        }
+        
+        function goToDashboard() {
+            alert('Dashboard coming soon! This would navigate to the main app dashboard.');
+        }
+        
+        // Close block modal on outside click
+        document.getElementById('blockModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('blockModal')) {
+                showScreen('landing');
+            }
+        });
+        
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
